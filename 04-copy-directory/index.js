@@ -12,18 +12,18 @@ const getNameOfFiles = async (path) => {
   }
 }
 
-const createFiles = async (path, pathCopy) => {
-  await mkdir(copyFolderPath, { recursive: true });
-  const nameFiles = await getNameOfFiles(folderPath);
-  for (const item of nameFiles) {
-    try {
+const copyFiles = async (path, pathCopy) => {
+  try {
+    await mkdir(pathCopy, { recursive: true });
+    const nameFiles = await getNameOfFiles(path);
+    for (const item of nameFiles) {
       const copyFilePath = resolve(copyFolderPath, item);
-      const filePath = resolve(folderPath, item);
+      const filePath = resolve(path, item);
       await copyFile(filePath, copyFilePath);
-    } catch (e) {
-      console.log(e)
     }
+  } catch (e) {
+    console.log(e);
   }
 }
 
-createFiles(folderPath);
+copyFiles(folderPath, copyFolderPath);
