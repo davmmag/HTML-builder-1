@@ -1,14 +1,25 @@
 const { resolve, extname, basename } = require('node:path');
-const { readdir, readFile, mkdir, copyFile } = require('node:fs/promises');
+const { readdir, readFile, mkdir, rmdir, copyFile, access } = require('node:fs/promises');
 const { createWriteStream, createReadStream } = require('node:fs');
 const bundleFolderPath = resolve(__dirname, 'project-dist');
-const bundleStylesPath = resolve(bundleFolderPath, 'bundle.css')
+const bundleStylesPath = resolve(bundleFolderPath, 'style.css')
 const assetsPath = resolve(__dirname, 'assets');
 const assetsBundlePath = resolve(bundleFolderPath, 'assets');
 const componentsPath = resolve(__dirname, 'components');
 const stylesPath = resolve(__dirname, 'styles');
 const HTMLPath = resolve(__dirname, 'template.html');
 const bundleHTMLPath = resolve(bundleFolderPath, 'index.html');
+
+const check = async () => {
+  try {
+    await access(bundleFolderPath);
+    await rmdir(bundleFolderPath);
+  } catch (error) {
+    
+  }
+}
+
+check();
 const writableStreamStyles = createWriteStream(bundleStylesPath);
 
 const getStylesFiles = async (path) => {
