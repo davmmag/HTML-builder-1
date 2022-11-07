@@ -1,11 +1,15 @@
-const { readFile } = require('node:fs/promises');
+const { createReadStream } = require('node:fs');
 const { resolve } = require('node:path');
 
-const logFile = async (name) => {
+const logFile = (name) => {
   try {
     const filePath = resolve(__dirname, name);
-    const contents = await readFile(filePath, { encoding: 'utf-8' });
-    console.log(contents);
+    const readableStream = createReadStream(filePath, { encoding: 'utf-8' });
+    readableStream.on('readable', () => {
+      const data = readableStream.read();
+      console.log(data);
+      readableStream.close();
+    })
   } catch(error) {
     console.log(error)
   }
