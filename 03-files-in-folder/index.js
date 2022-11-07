@@ -13,13 +13,20 @@ const getFiles = async (path) => {
 
 const getInfoOfFiles = async (path) => {
   try {
-    const files = await getFiles(path).then(data => data.filter(file => file.isFile()));
-    for (let file of files) {
-      const name = file.name;
-      const stats = await stat((resolve(folderPath, name)));
-      const size = stats.size;
-      const ext = extname(name);
-      console.log(`${name} - ${ext} - ${size}byte`);
+    const files = await getFiles(path);
+    for (let item of files) {
+      if (extname(item.name).length === 0) {
+        continue;
+      }
+      if (item.isDirectory()) {
+        await getInfoOfFiles(resolve(path, item.name))
+      } else {
+        const name = item.name;
+        const stats = await stat((resolve(path, name)));
+        const size = stats.size;
+        const ext = extname(name);
+        console.log(`${name} - ${ext} - ${size}byte`);
+      }
     }
   } catch (e) {
     console.log(e);
