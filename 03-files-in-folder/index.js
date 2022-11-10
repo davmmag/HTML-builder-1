@@ -24,7 +24,7 @@ const getInfoOfFiles = async (path) => {
         const name = item.name;
         const stats = await stat((resolve(path, name)));
         const size = stats.size;
-        const ext = extname(name);
+        const ext = extname(name).slice(1);
         console.log(`${name} - ${ext} - ${size}byte`);
       }
     }
